@@ -2,7 +2,7 @@ const schema = require('./schema');
 const Joi = require('joi');
 
 exports.sectorValidator = (req, res, next) => {
-  const { error } = schema.updateTaskSchema.validate(req.query.sector);
+  const { error } = schema.sectorValidatorSchema.validate(req.query);
   if (error) {
     return res.status(400).json({ message: error.message });
   }
