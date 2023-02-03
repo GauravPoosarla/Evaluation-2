@@ -1,7 +1,7 @@
 const services = require('../../src/services/detailsService.js');
 const controllers = require('../../src/controllers/detailsController');
 
-describe('post details', () => {
+describe('details controller', () => {
   it('should return all new companies', async () => {
     jest.spyOn(services, 'postDetails').mockResolvedValue([{
       id: 1,
