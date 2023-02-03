@@ -8,7 +8,7 @@ exports.postDetails = async (url) => {
   
   const companies = [];
   const sectors = [];
-  data.forEach(async (item) => {
+  for(const item of data){
     const companySpecificDetails = await axios.get(`http://54.167.46.10/company/${item.company_id}`);
     const company_id = companySpecificDetails.data.id;
     const name = companySpecificDetails.data.name;
@@ -19,19 +19,20 @@ exports.postDetails = async (url) => {
     const score = 0;
     const company = {company_id, name, numOfEmployees, ceo, sector, score};
     companies.push(company);
-  });
-
-  data.forEach((item) => {
+    console.log(companies);
+  };
+  
+  for(const item of data){
     if (!sectors.includes(item.company_sector)) {
       sectors.push(item.company_sector);
     }
-  });
+  };
 
-  sectors.forEach (async (sector) => {
+  for(const sector of sectors){
     const sectorDetails = await axios.get(`http://54.167.46.10/sector?name=${sector}`);
     const sectorData = sectorDetails.data;
 
-    sectorData.forEach(async (item) => {
+    sectorData.forEach((item) => {
       const id = item.companyId;
       const cpi = item.performanceIndex.filter((item) => item.key === 'cpi')[0].value;
       const cf = item.performanceIndex.filter((item) => item.key === 'cf')[0].value;
@@ -44,10 +45,10 @@ exports.postDetails = async (url) => {
           company.score = score;
         }
       });
-      const dbResult = await db.Company.bulkCreate(companies);
-      return dbResult;
     });  
-  });
+  };
+  const dbResult = await db.Company.bulkCreate(companies);
+  return dbResult;
 }
 
 exports.getCompanies = async (sector) => {
