@@ -16,7 +16,7 @@ describe('detailsController', () => {
     jest.spyOn(services, 'postDetails').mockResolvedValue(resolvedValue);
     const mockReq = {
       body: {
-        url: 'https://store-0001.s3.amazonaws.com/input.csv'
+        urlLink: 'https://store-0001.s3.amazonaws.com/input.csv'
       }
     };
     const mockRes = {
@@ -27,7 +27,6 @@ describe('detailsController', () => {
     await controllers.detailsController(mockReq, mockRes);
     expect(mockRes.status).toHaveBeenCalledWith(201);
     expect(mockRes.json).toHaveBeenCalledWith(resolvedValue);
-    jest.setTimeout(30000);
   });
 });
 

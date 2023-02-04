@@ -5,7 +5,7 @@ const HttpError = require('../../errors/httpError.js');
 describe('postDetails', () => {
   it('should create new entries', async () => {
     const url = 'https://store-0001.s3.amazonaws.com/input.csv';
-    jest.spyOn(db.Company, 'bulkCreate').mockResolvedValue([
+    jest.spyOn(db.Company, 'findAll').mockResolvedValue([
       {
         "id": 842,
         "company_id": "95b5a067-808a-44a9-a490-b4ef8a045f61",
@@ -43,8 +43,7 @@ describe('getCompanies', () => {
         "company_id": "46e1d061-e39d-4d5c-8e0e-3fa5d45d9efc",
         "company_name": "Apple",
         "ceo": "Dr. Christina Batz",
-        "score": 26.17,
-        "rank": 1
+        "score": 26.17
       }];
     jest.spyOn(db.Company, 'findAll').mockResolvedValue(returnValue);
     const companiesBySector = await services.getCompanies('Software');
