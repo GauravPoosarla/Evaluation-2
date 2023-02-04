@@ -68,7 +68,7 @@ exports.getCompanies = async (sector) => {
 exports.updateDetails = async (ceo, id) => {
   const company = await db.Company.update({ ceo: ceo }, { where: { company_id: id }});
   if(company[0] === 0) {
-    throw new HTTPError('No company found', 404);
+    throw new HTTPError('Company not found', 404);
   };
   return company;
 }
