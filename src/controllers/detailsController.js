@@ -4,7 +4,7 @@ let userDetails;
 exports.detailsController = async (req, res) => {
   const urlLink = req.body.urlLink;
   const result = await services.postDetails(urlLink);
-  res.status(200).json(result);
+  res.status(201).json(result);
 }
 
 exports.getCompanies = async (req, res) => {
@@ -14,7 +14,7 @@ exports.getCompanies = async (req, res) => {
     res.status(200).json(result);
   }
   catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(404).json({ message: err.message });
   }
 }
 
@@ -26,6 +26,6 @@ exports.updateDetails = async (req, res) => {
     res.status(200).json(result);
   }
   catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(404).json({ message: err.message });
   }
 }

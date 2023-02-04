@@ -1,94 +1,117 @@
 const services = require('../../src/services/detailsService.js');
 const controllers = require('../../src/controllers/detailsController');
+const httpError = require('../../errors/httpError');
 
-describe('details controller', () => {
-  it('should return all new companies', async () => {
-    jest.spyOn(services, 'postDetails').mockResolvedValue([{
-      id: 1,
-      name: 'company1',
-      score: 0
-    },
-    {
-      id: 2,
-      name: 'company2',
-      score: 0
-    }]);
-    const mockreq = {};
-    const mockres = {
-      json: jest.fn()
-    };
-    await controllers.detailsController(mockreq, mockres);
-    expect(mockres.json).toHaveBeenCalledWith([{
-      id: 1,
-      name: 'company1',
-      score: 0
-    },
-    {
-      id: 2,
-      name: 'company2',
-      score: 0
-    }]);
-  });
-});
-
-describe('post details', () => {
-  it('should return an error', async () => {
-    jest.spyOn(services, 'postDetails').mockRejectedValue('error');
-    const mockreq = {};
-    const mockres = {
-      json: jest.fn()
-    };
-    await controllers.detailsController(mockreq, mockres);
-    expect(mockres.json).toHaveBeenCalledWith('error');
-  });
-});
-
-describe('get companies', () => {
-  it('should return all companies in a sector', async () => {
-    jest.spyOn(services, 'getCompanies').mockResolvedValue([{
-      id: 1,
-      name: 'company1',
-      score: 0
-    },
-    {
-      id: 2,
-      name: 'company2',
-      score: 0
-    }]);
-    const mockreq = {
-      query: {
-        sector: 'sector1'
+describe('detailsController', () => {
+  it('should create new entries in the database', async () => {
+    const resolvedValue =
+      [
+        {
+          "id": 842,
+          "company_id": "95b5a067-808a-44a9-a490-b4ef8a045f61",
+          "name": "Volkswagen",
+          "score": 15.784075000000001
+        }
+      ];
+    jest.spyOn(services, 'postDetails').mockResolvedValue(resolvedValue);
+    const mockReq = {
+      body: {
+        url: 'https://store-0001.s3.amazonaws.com/input.csv'
       }
     };
-    const mockres = {
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
       json: jest.fn()
     };
-    await controllers.getCompanies(mockreq, mockres);
-    expect(mockres.json).toHaveBeenCalledWith([{
-      id: 1,
-      name: 'company1',
-      score: 0
-    },
-    {
-      id: 2,
-      name: 'company2',
-      score: 0
-    }]);
+
+    await controllers.detailsController(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(201);
+    expect(mockRes.json).toHaveBeenCalledWith(resolvedValue);
+    jest.setTimeout(30000);
   });
 });
 
-describe('get companies', () => {
-  it('should return an error', async () => {
-    jest.spyOn(services, 'getCompanies').mockRejectedValue('error');
-    const mockreq = {
+describe('getCompanies', () => {
+  it('should return companies in a particular sector', async () => {
+    const resolvedValue = [
+      {
+        "company_id": "95b5a067-808a-44a9-a490-b4ef8a045f61",
+        "name": "Volkswagen",
+        "ceo": "Faith Jenkins",
+        "score": 15.784075000000001
+      }
+    ];
+    jest.spyOn(services, 'getCompanies').mockResolvedValue(resolvedValue);
+    const mockReq = {
       query: {
-        sector: 'sector1'
+        sector: 'Automobile'
       }
     };
-    const mockres = {
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
       json: jest.fn()
     };
-    await controllers.getCompanies(mockreq, mockres);
-    expect(mockres.json).toHaveBeenCalledWith('error');
+
+    await controllers.getCompanies(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith(resolvedValue);
+  });
+
+  it('should return an error message if sector is not found', async () => {
+    const err = new httpError('Sector not found', 404);
+    jest.spyOn(services, 'getCompanies').mockRejectedValue(err);
+    const mockReq = {
+      query: {
+        sector: 'Design'
+      }
+    };
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    await controllers.getCompanies(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(404);
+    expect(mockRes.json).toHaveBeenCalledWith({ message: err.message });
+  });
+});
+
+describe('updateDetails', () => {
+  it('should update the details of a company', async () => {
+    const resolvedValue = [1];
+    jest.spyOn(services, 'updateDetails').mockResolvedValue(resolvedValue);
+    const mockReq = {
+      body: {
+        ceo: 'Faith Jenkins',
+        id: '95b5a067-808a-44a9-a490-b4ef8a045f61'
+      }
+    };
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    await controllers.updateDetails(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith(resolvedValue);
+  });
+
+  it('should return an error message if company is not found', async () => {
+    const err = new httpError('Company not found', 404);
+    jest.spyOn(services, 'updateDetails').mockRejectedValue(err);
+    const mockReq = {
+      body: {
+        ceo: 'Gaurav Poosarla',
+        id: '95b5a067-808a-44a9-a490-b4ef8a043789'
+      }
+    };
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    await controllers.updateDetails(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(404);
+    expect(mockRes.json).toHaveBeenCalledWith({ message: err.message });
   });
 });
