@@ -60,7 +60,7 @@ exports.getCompanies = async (sector) => {
     order : [['score', 'DESC']]});
 
   if (companies.length === 0) {
-    throw new HTTPError('No companies found', 404);
+    throw new HTTPError('Sector not found', 404);
   };
   return companies;
 }
