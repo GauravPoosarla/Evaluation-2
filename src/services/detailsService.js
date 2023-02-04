@@ -1,6 +1,7 @@
 const axios = require('axios');
 const utils = require('../utils/detailUtils.js');
 const db = require('../../database/models/index.js');
+const HTTPError = require('../../errors/httpError.js');
 
 exports.postDetails = async (url) => {
   const result = await axios.get(url);
@@ -47,16 +48,27 @@ exports.postDetails = async (url) => {
     });
   };
   const dbResult = await db.Company.bulkCreate(companies);
-  return dbResult;
+  const createdCompanies = await db.Company.findAll({
+    attributes: ['id', 'company_id', 'name', 'score']
+  });
+  return createdCompanies;
 }
 
-
 exports.getCompanies = async (sector) => {
-  const companies = await db.Company.findAll({ where: { sector }} ,{order : [['score', 'DESC']]});
+  const companies = await db.Company.findAll({ where: { sector: sector }, 
+    attributes: ['company_id', 'name', 'ceo', 'score'],
+    order : [['score', 'DESC']]});
+
+  if (companies.length === 0) {
+    throw new HTTPError('No companies found', 404);
+  };
   return companies;
 }
 
 exports.updateDetails = async (ceo, id) => {
-  const company = await db.Company.update({ ceo }, { where: { id } });
+  const company = await db.Company.update({ ceo: ceo }, { where: { id: id }});
+  if(company[0] === 0) {
+    throw new HTTPError('No company found', 404);
+  };
   return company;
 }

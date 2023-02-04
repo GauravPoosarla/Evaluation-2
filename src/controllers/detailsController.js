@@ -4,22 +4,28 @@ let userDetails;
 exports.detailsController = async (req, res) => {
   const urlLink = req.body.urlLink;
   const result = await services.postDetails(urlLink);
-  const finalResult = [];
-  result.map((item) => (finalResult.push({id: item.id, name: item.name, score: item.score  })));
-  res.status(200).json(finalResult);
+  res.status(200).json(result);
 }
 
 exports.getCompanies = async (req, res) => {
   const sector = req.query.sector;
-  const result = await services.getCompanies(sector);
-  const finalResult = [];
-  result.map((item) => (finalResult.push({id: item.id, name: item.name, ceo: item.ceo, score: item.score  })));
-  res.status(200).json(finalResult);
+  try {
+    const result = await services.getCompanies(sector);
+    res.status(200).json(result);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }
 
 exports.updateDetails = async (req, res) => {
   const ceo = req.body.ceo;
   const id = req.body.id;
-  const result = await services.updateDetails(ceo, id);
-  res.status(200).json(result);
+  try {
+    const result = await services.updateDetails(ceo, id);
+    res.status(200).json(result);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }
