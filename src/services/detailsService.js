@@ -60,7 +60,7 @@ exports.getCompanies = async (sector) => {
     attributes: ['company_id', 'name', 'ceo', 'score'],
     order: [['score', 'DESC']]
   });
-  console.log(companies);
+  
   for (let i = 0; i < companies.length; i++) {
     companies[i].dataValues.rank = i + 1;
   }
