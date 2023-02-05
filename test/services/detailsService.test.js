@@ -40,10 +40,12 @@ describe('getCompanies', () => {
   it('should return companies in a sector', async () => {
     const returnValue = [
       {
-        "company_id": "46e1d061-e39d-4d5c-8e0e-3fa5d45d9efc",
-        "company_name": "Apple",
-        "ceo": "Dr. Christina Batz",
-        "score": 26.17
+        "dataValues": {
+          "company_id": "46e1d061-e39d-4d5c-8e0e-3fa5d45d9efc",
+          "company_name": "Apple",
+          "ceo": "Dr. Christina Batz",
+          "score": 26.17
+        }
       }];
     jest.spyOn(db.Company, 'findAll').mockResolvedValue(returnValue);
     const companiesBySector = await services.getCompanies('Software');

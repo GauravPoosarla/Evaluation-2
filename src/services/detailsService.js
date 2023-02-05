@@ -55,9 +55,15 @@ exports.postDetails = async (url) => {
 }
 
 exports.getCompanies = async (sector) => {
-  const companies = await db.Company.findAll({ where: { sector: sector }, 
+  const companies = await db.Company.findAll({
+    where: { sector: sector },
     attributes: ['company_id', 'name', 'ceo', 'score'],
-    order : [['score', 'DESC']]});
+    order: [['score', 'DESC']]
+  });
+  console.log(companies);
+  for (let i = 0; i < companies.length; i++) {
+    companies[i].dataValues.rank = i + 1;
+  }
 
   if (companies.length === 0) {
     throw new HTTPError('Sector not found', 404);
@@ -66,8 +72,8 @@ exports.getCompanies = async (sector) => {
 }
 
 exports.updateDetails = async (ceo, id) => {
-  const company = await db.Company.update({ ceo: ceo }, { where: { company_id: id }});
-  if(company[0] === 0) {
+  const company = await db.Company.update({ ceo: ceo }, { where: { company_id: id } });
+  if (company[0] === 0) {
     throw new HTTPError('Company not found', 404);
   };
   return company;

@@ -1,5 +1,4 @@
 const services = require('../services/detailsService');
-let userDetails;
 
 exports.detailsController = async (req, res) => {
   const urlLink = req.body.urlLink;
@@ -10,7 +9,7 @@ exports.detailsController = async (req, res) => {
 exports.getCompanies = async (req, res) => {
   const sector = req.query.sector;
   try {
-    const result = await services.getCompanies(sector);
+    const result = await services.getCompanies(sector); 
     res.status(200).json(result);
   }
   catch (err) {
