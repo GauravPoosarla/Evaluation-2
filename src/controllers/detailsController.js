@@ -1,6 +1,6 @@
 const services = require('../services/detailsService');
 
-exports.detailsController = async (req, res) => {
+exports.postDetails = async (req, res) => {
   const urlLink = req.body.urlLink;
   const result = await services.postDetails(urlLink);
   res.status(201).json(result);
