@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const detailsController = require('../controllers/detailsController');
-const { sectorValidator, updateDetailsValidator } = require('../../middlewares/middleware');
+const { sectorValidator, updateDetailsValidator } = require('../middlewares/middleware');
 
 router.post('/api/save', detailsController.detailsController);
 router.get('/api/companies', sectorValidator ,detailsController.getCompanies);
