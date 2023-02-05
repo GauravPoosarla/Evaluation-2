@@ -24,7 +24,7 @@ describe('detailsController', () => {
       json: jest.fn()
     };
 
-    await controllers.detailsController(mockReq, mockRes);
+    await controllers.postDetails(mockReq, mockRes);
     expect(mockRes.status).toHaveBeenCalledWith(201);
     expect(mockRes.json).toHaveBeenCalledWith(resolvedValue);
   });

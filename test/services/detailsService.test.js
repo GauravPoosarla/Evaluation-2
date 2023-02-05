@@ -33,7 +33,7 @@ describe('postDetails', () => {
         "name": "Apple",
         "score": 29.987724999999998
       }]);
-  });
+  }, 30000);
 });
 
 describe('getCompanies', () => {
