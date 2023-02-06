@@ -75,10 +75,15 @@ exports.getCompanies = async (sector) => {
   return companies;
 };
 
-exports.updateDetails = async (ceo, id) => {
-  const company = await db.Company.update({ ceo: ceo }, { where: { company_id: id } });
+exports.updateDetails = async (ceo, name, id) => {
+  const company = await db.Company.update({ ceo: ceo, name: name}, { where: { company_id: id } });
   if (company[0] === 0) {
     throw new HTTPError('Company not found', 404);
   }
-  return company;
+
+  const updatedCompany = await db.Company.findOne({
+    where: { company_id: id },
+    attributes: ['company_id', 'name', 'ceo', 'score']
+  });
+  return updatedCompany;
 };

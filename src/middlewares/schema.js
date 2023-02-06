@@ -11,4 +11,5 @@ exports.sectorValidatorSchema = joi.object({
 exports.updateTaskSchema = joi.object({
   ceo: joi.string().required(),
   id: joi.string().required(),
+  name: joi.string().required(),
 });

@@ -30,8 +30,9 @@ exports.getCompanies = async (req, res) => {
 exports.updateDetails = async (req, res) => {
   const ceo = req.body.ceo;
   const id = req.body.id;
+  const name = req.body.name;
   try {
-    const result = await services.updateDetails(ceo, id);
+    const result = await services.updateDetails(ceo, name, id);
     res.status(200).json(result);
   }
   catch (err) {
