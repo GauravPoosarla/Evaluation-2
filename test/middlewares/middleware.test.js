@@ -97,6 +97,7 @@ describe('updateDetailsValidator', () => {
     const req = {
       body: {
         ceo: 'Elon Musk',
+        name: 'Tesla',
         id: '5f9f1b9b0b1b9c0b8c8c8c8c',
       },
     };
@@ -112,6 +113,8 @@ describe('updateDetailsValidator', () => {
     const req = {
       body: {
         ceo: '',
+        name: 'Tesla',
+        id: '5f9f1b9b0b1b9c0b8c8c8c8c',
       },
     };
     const res = {
@@ -127,6 +130,8 @@ describe('updateDetailsValidator', () => {
     const req = {
       body: {
         ceo: 123,
+        name: 'Tesla',
+        id: '5f9f1b9b0b1b9c0b8c8c8c8c',
       },
     };
     const res = {
@@ -142,6 +147,7 @@ describe('updateDetailsValidator', () => {
     const req = {
       body: {
         ceo: 'John Doe',
+        name: 'Tesla',
         id: ''
       },
     };
@@ -158,6 +164,7 @@ describe('updateDetailsValidator', () => {
     const req = {
       body: {
         ceo: 'John Doe',
+        name: 'Tesla',
         id: 123
       },
     };
@@ -170,5 +177,38 @@ describe('updateDetailsValidator', () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ message: '"id" must be a string' });
   });
+  it('should return 400 when name is not provided', () => {
+    const req = {
+      body: {
+        ceo: 'John Doe',
+        name: '',
+        id: '5f9f1b9b0b1b9c0b8c8c8c8c',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const next = jest.fn();
+    updateDetailsValidator(req, res, next);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: '"name" is not allowed to be empty' });
+  });
+  it('should return 400 when name is not a string', () => {
+    const req = {
+      body: {
+        ceo: 'John Doe',
+        name: 123,
+        id: '5f9f1b9b0b1b9c0b8c8c8c8c',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const next = jest.fn();
+    updateDetailsValidator(req, res, next);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: '"name" must be a string' });
+  });
 });
-
