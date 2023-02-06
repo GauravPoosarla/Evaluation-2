@@ -1,4 +1,50 @@
-const { sectorValidator, updateDetailsValidator } = require('../../src/middlewares/middleware');
+const { urlValidator, sectorValidator, updateDetailsValidator } = require('../../src/middlewares/middleware');
+
+describe('urlValidator', () => {
+  it('should call the next function when url is provided', () => {
+    const req = {
+      body: {
+        urlLink: 'https://store-0001.s3.amazonaws.com/input.csv',
+      },
+    };
+    const res = {
+    };
+    const next = jest.fn();
+    urlValidator(req, res, next);
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('should return 400 when url is not provided', () => {
+    const req = {
+      body: {
+        urlLink: '',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const next = jest.fn();
+    urlValidator(req, res, next);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: '\"urlLink\" must be [https://store-0001.s3.amazonaws.com/input.csv]' });
+  });
+  it('should return 400 when url is not valid', () => {
+    const req = {
+      body: {
+        urlLink: 'https://www.google',
+      },
+    };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    const next = jest.fn();
+    urlValidator(req, res, next);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ message: '\"urlLink\" must be [https://store-0001.s3.amazonaws.com/input.csv]' });
+  });
+});
 
 describe('sectorValidator', () => {
   it('should call the next function when sector is provided', () => {
