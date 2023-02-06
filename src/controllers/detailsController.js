@@ -1,10 +1,20 @@
 const services = require('../services/detailsService');
-
+const httpError = require('../../errors/httpError');
 exports.postDetails = async (req, res) => {
   const urlLink = req.body.urlLink;
-  const result = await services.postDetails(urlLink);
-  res.status(201).json(result);
-}
+  try {
+    const result = await services.postDetails(urlLink);
+    res.status(201).json(result);
+  }
+  catch (err) {
+    if(err instanceof httpError) {
+      res.status(err.statusCode).json({ message: err.message });
+    }
+    else {
+      res.status(500).json({ message: err.message });
+    }
+  }
+};
 
 exports.getCompanies = async (req, res) => {
   const sector = req.query.sector;
@@ -15,7 +25,7 @@ exports.getCompanies = async (req, res) => {
   catch (err) {
     res.status(404).json({ message: err.message });
   }
-}
+};
 
 exports.updateDetails = async (req, res) => {
   const ceo = req.body.ceo;
@@ -27,4 +37,4 @@ exports.updateDetails = async (req, res) => {
   catch (err) {
     res.status(404).json({ message: err.message });
   }
-}
+};

@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const detailsController = require('../controllers/detailsController');
-const { sectorValidator, updateDetailsValidator } = require('../middlewares/middleware');
+const { urlValidator, sectorValidator, updateDetailsValidator } = require('../middlewares/middleware');
 
-router.post('/api/save', detailsController.postDetails);
+router.post('/api/save', urlValidator, detailsController.postDetails);
 router.get('/api/companies', sectorValidator ,detailsController.getCompanies);
 router.put('/api/update', updateDetailsValidator, detailsController.updateDetails);
 

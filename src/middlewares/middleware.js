@@ -1,5 +1,12 @@
 const schema = require('./schema');
-const Joi = require('joi');
+
+exports.urlValidator = (req, res, next) => {
+  const { error } = schema.urlValidatorSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.message });
+  }
+  next();
+};
 
 exports.sectorValidator = (req, res, next) => {
   const { error } = schema.sectorValidatorSchema.validate(req.query);
@@ -7,7 +14,7 @@ exports.sectorValidator = (req, res, next) => {
     return res.status(400).json({ message: error.message });
   }
   next();
-}
+};
 
 exports.updateDetailsValidator = (req, res, next) => {
   const { error } = schema.updateTaskSchema.validate(req.body);
@@ -15,4 +22,4 @@ exports.updateDetailsValidator = (req, res, next) => {
     return res.status(400).json({ message: error.message });
   }
   next();
-}
+};
