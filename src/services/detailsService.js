@@ -15,18 +15,17 @@ exports.postDetails = async (url) => {
     const name = companySpecificDetails.data.name;
     const ceo = companySpecificDetails.data.ceo;
     const numOfEmployees = 15000; // no data on employees fetched from api
-    const companyDetailsFromPost = data.filter((item) => item.company_id === company_id);
-    const sector = companyDetailsFromPost[0].company_sector;
+    const sector = item.company_sector;
     const score = 0;
     const company = { company_id, name, numOfEmployees, ceo, sector, score };
     companies.push(company);
-  };
+  }
 
   for (const item of data) {
     if (!sectors.includes(item.company_sector)) {
       sectors.push(item.company_sector);
     }
-  };
+  }
 
   for (const sector of sectors) {
     const sectorDetails = await axios.get(`http://54.167.46.10/sector?name=${sector}`);
@@ -46,13 +45,18 @@ exports.postDetails = async (url) => {
         }
       });
     });
-  };
-  const dbResult = await db.Company.bulkCreate(companies);
+  }
+  
+  const dbResult = await db.Company.bulkCreate(companies, { updateOnDuplicate: ['score'] });
+  if(dbResult.length === 0) {
+    throw new HTTPError('Error in creating companies', 500);
+  }
+  
   const createdCompanies = await db.Company.findAll({
-    attributes: ['id', 'company_id', 'name', 'score']
+    attributes: ['company_id', 'name', 'score']
   });
   return createdCompanies;
-}
+};
 
 exports.getCompanies = async (sector) => {
   const companies = await db.Company.findAll({
@@ -67,14 +71,14 @@ exports.getCompanies = async (sector) => {
 
   if (companies.length === 0) {
     throw new HTTPError('Sector not found', 404);
-  };
+  }
   return companies;
-}
+};
 
 exports.updateDetails = async (ceo, id) => {
   const company = await db.Company.update({ ceo: ceo }, { where: { company_id: id } });
   if (company[0] === 0) {
     throw new HTTPError('Company not found', 404);
-  };
+  }
   return company;
-}
+};

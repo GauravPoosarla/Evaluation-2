@@ -7,10 +7,10 @@ describe('detailsController', () => {
     const resolvedValue =
       [
         {
-          "id": 842,
-          "company_id": "95b5a067-808a-44a9-a490-b4ef8a045f61",
-          "name": "Volkswagen",
-          "score": 15.784075000000001
+          'id': 842,
+          'company_id': '95b5a067-808a-44a9-a490-b4ef8a045f61',
+          'name': 'Volkswagen',
+          'score': 15.784075000000001
         }
       ];
     jest.spyOn(services, 'postDetails').mockResolvedValue(resolvedValue);
@@ -34,10 +34,10 @@ describe('getCompanies', () => {
   it('should return companies in a particular sector', async () => {
     const resolvedValue = [
       {
-        "company_id": "95b5a067-808a-44a9-a490-b4ef8a045f61",
-        "name": "Volkswagen",
-        "ceo": "Faith Jenkins",
-        "score": 15.784075000000001
+        'company_id': '95b5a067-808a-44a9-a490-b4ef8a045f61',
+        'name': 'Volkswagen',
+        'ceo': 'Faith Jenkins',
+        'score': 15.784075000000001
       }
     ];
     jest.spyOn(services, 'getCompanies').mockResolvedValue(resolvedValue);

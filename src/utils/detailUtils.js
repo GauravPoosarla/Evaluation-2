@@ -11,4 +11,4 @@ exports.convertCSVtoJSON = (csv) => {
     result.push(obj);
   }
   return result;
-}
+};
