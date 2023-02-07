@@ -33,7 +33,7 @@ describe('postDetails', () => {
         'name': 'Apple',
         'score': 29.987724999999998
       }]);
-  }, 30000);
+  });
 });
 
 describe('getCompanies', () => {
@@ -62,16 +62,16 @@ describe('getCompanies', () => {
 describe('updateDetails', () => {
   it('should update the details of a company', async () => {
     const returnValue = [
-      1
+
     ];
     jest.spyOn(db.Company, 'update').mockResolvedValue(returnValue);
-    const updateDetails = await services.updateDetails('Dr. Christina Batz', '46e1d061-e39d-4d5c-8e0e-3fa5d45d9efc');
+    const updateDetails = await services.updateDetails('Gaurav', 'McKinsey & Company', '46e1d061-e39d-4d5c-8e0e-3fa5d45d9efc');
     expect(updateDetails).toEqual(returnValue);
   });
 
   it('should throw an error when company does not exist', async () => {
     const err = new HttpError('Company not found', 404);
     jest.spyOn(db.Company, 'update').mockResolvedValue([0]);
-    await expect(services.updateDetails('Dr. Christina Batz', '46e1d061-e39d-4d5c-8e0e-3fa5d453212')).rejects.toThrow(err);
+    await expect(services.updateDetails('Dr. Christina Batz', 'Google', '46e1d061-e39d-4d5c-8e0e-3fa5d453212')).rejects.toThrow(err);
   });
 });

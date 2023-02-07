@@ -9,13 +9,16 @@ exports.postDetails = async (url) => {
 
   const companies = [];
   const sectors = [];
-  for (const item of data) {
-    const companySpecificDetails = await axios.get(`http://54.167.46.10/company/${item.company_id}`);
-    const company_id = companySpecificDetails.data.id;
-    const name = companySpecificDetails.data.name;
-    const ceo = companySpecificDetails.data.ceo;
+  const companiesPromiseArray = data.map((item) => axios.get(`http://54.167.46.10/company/${item.company_id}`));
+  const companyValues = await Promise.all(companiesPromiseArray);
+
+  for (const item of companyValues) {
+    const companySpecificDetails = item.data;
+    const company_id = companySpecificDetails.id;
+    const name = companySpecificDetails.name;
+    const ceo = companySpecificDetails.ceo;
     const numOfEmployees = 15000; // no data on employees fetched from api
-    const sector = item.company_sector;
+    const sector = data.filter((item) => item.company_id === company_id)[0].company_sector;
     const score = 0;
     const company = { company_id, name, numOfEmployees, ceo, sector, score };
     companies.push(company);
@@ -27,9 +30,11 @@ exports.postDetails = async (url) => {
     }
   }
 
-  for (const sector of sectors) {
-    const sectorDetails = await axios.get(`http://54.167.46.10/sector?name=${sector}`);
-    const sectorData = sectorDetails.data;
+  const sectorPromiseArray = sectors.map((sector) => axios.get(`http://54.167.46.10/sector?name=${sector}`));
+  const sectorValues = await Promise.all(sectorPromiseArray);
+
+  for (const sector of sectorValues) {
+    const sectorData = sector.data;
 
     sectorData.forEach((item) => {
       const id = item.companyId;
@@ -49,7 +54,7 @@ exports.postDetails = async (url) => {
   
   const dbResult = await db.Company.bulkCreate(companies, { updateOnDuplicate: ['score'] });
   if(dbResult.length === 0) {
-    throw new HTTPError('Error in creating companies', 500);
+    throw new Error('Error in creating companies', 500);
   }
   
   const createdCompanies = await db.Company.findAll({

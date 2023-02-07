@@ -1,7 +1,7 @@
 const joi = require('joi');
 
 exports.urlValidatorSchema = joi.object({
-  urlLink: joi.string().valid('https://store-0001.s3.amazonaws.com/input.csv').required(),
+  urlLink: joi.string().uri().required(),
 });
 
 exports.sectorValidatorSchema = joi.object({

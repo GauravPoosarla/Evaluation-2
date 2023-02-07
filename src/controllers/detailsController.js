@@ -8,7 +8,7 @@ exports.postDetails = async (req, res) => {
   }
   catch (err) {
     if(err instanceof httpError) {
-      res.status(err.statusCode).json({ message: err.message });
+      res.status(400).json({ message: err.message });
     }
     else {
       res.status(500).json({ message: err.message });

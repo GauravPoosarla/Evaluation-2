@@ -28,6 +28,40 @@ describe('detailsController', () => {
     expect(mockRes.status).toHaveBeenCalledWith(201);
     expect(mockRes.json).toHaveBeenCalledWith(resolvedValue);
   });
+  it('should throw an error when url is invalid', async () => {
+    const err = new httpError('Invalid url', 400);
+    jest.spyOn(services, 'postDetails').mockRejectedValue(err);
+    const mockReq = {
+      body: {
+        urlLink: 'https://store-0001.s3.amazonaws.com/input.csv'
+      }
+    };
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    await controllers.postDetails(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(400);
+    expect(mockRes.json).toHaveBeenCalledWith({message: 'Invalid url'});
+  });
+  it('should throw an error when database is down', async () => {
+    const err = new httpError('Database down', 500);
+    jest.spyOn(services, 'postDetails').mockRejectedValue(err);
+    const mockReq = {
+      body: {
+        urlLink: 'https://store-0001.s3.amazonaws.com/input.csv'
+      }
+    };
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    await controllers.postDetails(mockReq, mockRes);
+    expect(mockRes.status).toHaveBeenCalledWith(400);
+    expect(mockRes.json).toHaveBeenCalledWith({message: 'Database down'});
+  });
 });
 
 describe('getCompanies', () => {
