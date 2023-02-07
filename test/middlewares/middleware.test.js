@@ -27,12 +27,12 @@ describe('urlValidator', () => {
     const next = jest.fn();
     urlValidator(req, res, next);
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ message: '\"urlLink\" must be [https://store-0001.s3.amazonaws.com/input.csv]' });
+    expect(res.json).toHaveBeenCalledWith({ message: '\"urlLink\" is not allowed to be empty' });
   });
   it('should return 400 when url is not valid', () => {
     const req = {
       body: {
-        urlLink: 'https://www.google',
+        urlLink: 'https//www.google',
       },
     };
     const res = {
@@ -42,7 +42,7 @@ describe('urlValidator', () => {
     const next = jest.fn();
     urlValidator(req, res, next);
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ message: '\"urlLink\" must be [https://store-0001.s3.amazonaws.com/input.csv]' });
+    expect(res.json).toHaveBeenCalledWith({ message: '\"urlLink\" must be a valid uri' });
   });
 });
 
